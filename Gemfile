@@ -12,6 +12,7 @@ gem 'oj'
 gem 'oj_mimic_json'
 gem 'loaf'
 gem 'kaminari'
+gem 'typhoeus'
 
 ####################################
 ## Assets
