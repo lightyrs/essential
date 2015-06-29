@@ -1,0 +1,19 @@
+defaults: &defaults
+  adapter: postgresql
+  pool: 12
+  timeout: 10000
+
+test:
+  <<: *defaults
+  database: essential-test
+  host: 127.0.0.1
+  min_messages: WARNING
+
+development:
+  <<: *defaults
+  database: essential-development
+  host: 127.0.0.1
+
+production:
+  <<: *defaults
+  database: essential-production
