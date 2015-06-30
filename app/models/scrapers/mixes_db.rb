@@ -22,7 +22,7 @@ module Scrapers
       %r{
         (\d{4}-\d{2}-\d{2})                           # date
         \s-\s                                         # white space
-        (?:([^-@]*)\s)?                                # artists
+        (?:([^-@]*)\s)?                               # artists
         (?:@\s)?                                      # place separator
         (.*)                                          # place
         (?:\s-\sEssential\sMix|\(Essential\sMix\))?   # suffix
