@@ -12,7 +12,7 @@ module Scrapers
     # So start at 1993 (when essential mixes premiered).
 
     BASE_URL = 'http://www.mixesdb.com'
-    INDEX_URL = 'http://www.mixesdb.com/db/index.php?title=Category:Essential_Mix&pagefrom=1993'
+    INDEX_URL = 'http://www.mixesdb.com/db/index.php?title=Category:Essential_Mix'
 
     def initialize
       @agent = Mechanize.new
@@ -23,28 +23,27 @@ module Scrapers
         (\d{4}-\d{2}-\d{2})                           # date
         \s-\s                                         # white space
         (?:([^-@]*)\s)?                               # artists
-        (?:@\s)?                                      # place separator
-        (.*)                                          # place
-        (?:\s-\sEssential\sMix|\(Essential\sMix\))?   # suffix
+        (?:@\s)?                                      # context separator
+        (.*)                                          # context
       }ix
     end
 
     def scrape!
-      @agent.get(INDEX_URL) do |page|
-        page.search('#catMixesList a.cat-tlI').each do |link|
+      (1993..Time.now.year).map do |year|
+        page = @agent.get("#{INDEX_URL}&pagefrom=#{year}")
+
+        page.search('#catMixesList a.cat-tlI').map do |link|
           captures = link.attributes['title'].value.match(matcher).try(:captures)
 
           if captures.nil?
             puts link.inspect
           else
-            link = {
+            {
               date:    captures[0],
               artists: captures[1],
-              place:   captures[2].gsub(/\s?-?\s?/(?:Essential Mix|\(Essential Mix\))/i, ''),
+              place:   captures[2].gsub(/\s?-?\s?(?:Essential Mix|\(Essential Mix\))/i, ''),
               url: "#{BASE_URL}#{link.attributes['href'].try(:value)}"
             }
-            puts captures[2].inspect.blue
-            puts link.inspect.green
           end
         end
       end
