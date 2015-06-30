@@ -13,6 +13,7 @@ gem 'oj_mimic_json'
 gem 'loaf'
 gem 'kaminari'
 gem 'typhoeus'
+gem 'mechanize'
 
 ####################################
 ## Assets
@@ -46,6 +47,6 @@ group :development, :test do
   gem 'pry-rails'
   gem 'pry-remote'
   gem 'pry-stack_explorer'
-  gem 'colorize'
+  gem 'colored'
   gem 'clipboard'
 end
