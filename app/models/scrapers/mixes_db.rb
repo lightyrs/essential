@@ -8,39 +8,25 @@ module Scrapers
       @agent = Mechanize.new
     end
 
-    def matcher
-      %r{
-        (\d{4}-\d{2}-\d{2})                           # date
-        \s-\s                                         # white space
-        (?:([^-@]*)\s)?                               # artists
-        (?:@\s)?                                      # context separator
-        (.*)                                          # context
-      }ix
-    end
-
     def scrape_index!
-      (1993..Time.now.year).map do |year|
-        page = @agent.get("#{INDEX_URL}&pagefrom=#{year}")
+      (1993..Time.now.year).each do |year|
+        begin
+          page = @agent.get("#{INDEX_URL}&pagefrom=#{year}")
 
-        page.search('#catMixesList a.cat-tlI').map do |link|
-          mixesdb_url = "#{BASE_URL}#{link.attributes['href'].try(:value)}"
-          full_title  = link.attributes['title'].value
-          captures    = full_title.match(matcher).try(:captures)
+          page.search('#catMixesList li > a').each do |link|
+            begin
+              mixesdb_url = "#{BASE_URL}#{link.attributes['href'].try(:value)}"
+              full_title  = link.attributes['title'].value
 
-          Mix.find_or_create_by(mixesdb_url: mixesdb_url) do |mix|
-            mix.full_title = full_title
+              Mix.find_or_create_by(mixesdb_url: mixesdb_url) do |mix|
+                mix.full_title = full_title
+              end
+            rescue => e
+              puts "#{e.class}: #{e.message}".red
+            end
           end
-
-          # if captures.nil?
-          #   puts full_title.inspect.red
-          # else
-          #   {
-          #     date:    captures[0],
-          #     artists: captures[1],
-          #     place:   captures[2].gsub(/\s?-?\s?(?:Essential Mix|\(Essential Mix\))/i, ''),
-          #     url:     "#{BASE_URL}#{link.attributes['href'].try(:value)}"
-          #   }
-          # end
+        rescue => e
+          puts "#{e.class}: #{e.message}".red
         end
       end
     end

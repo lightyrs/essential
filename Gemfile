@@ -14,6 +14,7 @@ gem 'loaf'
 gem 'kaminari'
 gem 'typhoeus'
 gem 'mechanize'
+gem 'colored'
 
 ####################################
 ## Assets
@@ -49,6 +50,5 @@ group :development, :test do
   gem 'pry-remote'
   gem 'pry-clipboard'
   gem 'pry-stack_explorer'
-  gem 'colored'
   gem 'clipboard'
 end
