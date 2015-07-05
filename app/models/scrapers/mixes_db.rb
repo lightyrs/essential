@@ -1,17 +1,7 @@
 module Scrapers
   class MixesDB
-    # Scrape this mediawiki for essential mix data and links
-    # to players or audio files.
-    # http://www.mixesdb.com/db/index.php/Category:Essential_Mix
-    # Pages are in this format:
-    #
-    # http://www.mixesdb.com/db/index.php?title=Category:Essential_Mix&pagefrom=1993
-    # All you need is a year and you'll get 200 mixes starting from the given year.
-    # These results may include results after the given year (but never before).
-    #
-    # So start at 1993 (when essential mixes premiered).
 
-    BASE_URL = 'http://www.mixesdb.com'
+    BASE_URL  = 'http://www.mixesdb.com'
     INDEX_URL = 'http://www.mixesdb.com/db/index.php?title=Category:Essential_Mix'
 
     def initialize
@@ -28,23 +18,29 @@ module Scrapers
       }ix
     end
 
-    def scrape!
+    def scrape_index!
       (1993..Time.now.year).map do |year|
         page = @agent.get("#{INDEX_URL}&pagefrom=#{year}")
 
         page.search('#catMixesList a.cat-tlI').map do |link|
-          captures = link.attributes['title'].value.match(matcher).try(:captures)
+          mixesdb_url = "#{BASE_URL}#{link.attributes['href'].try(:value)}"
+          full_title  = link.attributes['title'].value
+          captures    = full_title.match(matcher).try(:captures)
 
-          if captures.nil?
-            puts link.inspect
-          else
-            {
-              date:    captures[0],
-              artists: captures[1],
-              place:   captures[2].gsub(/\s?-?\s?(?:Essential Mix|\(Essential Mix\))/i, ''),
-              url: "#{BASE_URL}#{link.attributes['href'].try(:value)}"
-            }
+          Mix.find_or_create_by(mixesdb_url: mixesdb_url) do |mix|
+            mix.full_title = full_title
           end
+
+          # if captures.nil?
+          #   puts full_title.inspect.red
+          # else
+          #   {
+          #     date:    captures[0],
+          #     artists: captures[1],
+          #     place:   captures[2].gsub(/\s?-?\s?(?:Essential Mix|\(Essential Mix\))/i, ''),
+          #     url:     "#{BASE_URL}#{link.attributes['href'].try(:value)}"
+          #   }
+          # end
         end
       end
     end
