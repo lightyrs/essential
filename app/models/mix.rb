@@ -1,7 +1,7 @@
 class Mix < ActiveRecord::Base
 
-  attr_accessible :mixesdb_url, :soundcloud_url, :full_title,
-                  :artist_string, :genre_string, :air_date
+  attr_accessible :mixesdb_url, :soundcloud_url, :mixcloud_url,
+                  :full_title, :artists, :genres, :air_date, :venue
 
   validates :full_title,  presence: true
   validates :mixesdb_url, presence: true, uniqueness: true
