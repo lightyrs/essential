@@ -8,8 +8,8 @@ module Scrapers
       @agent = Mechanize.new
     end
 
-    def scrape_index!
-      (1993..Time.now.year).each do |year|
+    def scrape_index!(start_date = 1993, end_date = Time.now.year)
+      (start_date..end_date).each do |year|
         begin
           page = @agent.get("#{INDEX_URL}&pagefrom=#{year}")
 
@@ -40,35 +40,36 @@ module Scrapers
 
           page.search('#mw-normal-catlinks li > a').each do |link|
             begin
-              unless link.text.match(/(\d{4})|Tracklist|Essential Mix/)
+              link_text = link.text
+              unless link_text.match(/(\d{4})|Tracklist|Essential Mix/)
                 category_page = @agent.click(link)
                 category = category_page.search('#mw-normal-catlinks li > a').first.text
 
-                puts link.text.inspect.green
+                puts link_text.inspect.green
                 puts category.inspect.blue
 
                 case category
                 when 'Artist'
                   artist = Artist.find_or_create_by(
-                    name: link.text.gsub(' (Artist)', ''),
+                    name: link_text.gsub(' (Artist)', ''),
                     mixesdb_url: link.attributes['href'].to_s
                   )
                   mix.artists << artist
                 when 'Style'
                   genre = Genre.find_or_create_by(
-                    name: link.text,
+                    name: link_text,
                     mixesdb_url: link.attributes['href'].to_s
                   )
                   mix.genres << genre
                 when 'Event'
                   event = Event.find_or_create_by(
-                    name: link.text,
+                    name: link_text,
                     mixesdb_url: link.attributes['href'].to_s
                   )
                   mix.events << event
                 when 'Venue'
                   venue = Venue.find_or_create_by(
-                    name: link.text,
+                    name: link_text,
                     mixesdb_url: link.attributes['href'].to_s
                   )
                   mix.venues << venue
@@ -112,6 +113,10 @@ module Scrapers
           puts "#{e.class}: #{e.message}".red
         end
       end
+    end
+
+    def get_new_mixes!
+      scrape_index!(Time.now.year, Time.now.year + 1)
     end
   end
 end
