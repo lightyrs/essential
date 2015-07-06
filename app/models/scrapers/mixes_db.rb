@@ -40,7 +40,7 @@ module Scrapers
 
           page.search('#mw-normal-catlinks li > a').each do |link|
             begin
-              unless link.match(/(\d{4})|Tracklist|Essential Mix/)
+              unless link.text.match(/(\d{4})|Tracklist|Essential Mix/)
                 category_page = link.click
                 category = category_page.search('#mw-normal-catlinks li > a').first.text
 
