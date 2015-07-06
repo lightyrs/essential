@@ -17,11 +17,11 @@ module Scrapers
             begin
               mixesdb_url = "#{BASE_URL}#{link.attributes['href'].try(:value)}"
               full_title  = link.attributes['title'].value
-              airdate     = full_title.match(/(\d{4}-\d{2}-\d{2})/ix).captures[0] rescue nil
+              air_date    = full_title.match(/(\d{4}-\d{2}-\d{2})/ix).captures[0] rescue nil
 
               Mix.find_or_create_by(mixesdb_url: mixesdb_url) do |mix|
                 mix.full_title = full_title
-                mix.airdate    = DateTime.parse(airdate)
+                mix.air_date   = DateTime.parse(air_date) unless air_date.nil?
               end
             rescue => e
               puts "#{e.class}: #{e.message}".red
@@ -43,8 +43,19 @@ module Scrapers
               # mix.genres = []
               # mix.artists = []
               # mix.venue = ''
+            rescue => e
+              puts "#{e.class}: #{e.message}".red
+            end
+          end
+
+          page.search('[data-playersite]').each do |player|
+            begin
               # mix.soundcloud_url = ''
               # mix.mixcloud_url = ''
+              # mix.youtube_url = ''
+              # mix.hulkshare_url = ''
+              # mix.zippshare_url = ''
+              # mix.hearthisat_url = ''
             rescue => e
               puts "#{e.class}: #{e.message}".red
             end

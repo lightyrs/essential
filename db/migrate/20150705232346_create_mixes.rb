@@ -4,6 +4,10 @@ class CreateMixes < ActiveRecord::Migration
       t.text       :mixesdb_url
       t.text       :soundcloud_url
       t.text       :mixcloud_url
+      t.text       :youtube_url
+      t.text       :hulkshare_url
+      t.text       :zippyshare_url
+      t.text       :hearthisat_url
       t.text       :full_title
       t.text       :artists,       array: true, default: []
       t.text       :genres,        array: true, default: []
