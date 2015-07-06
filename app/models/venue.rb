@@ -2,8 +2,8 @@ class Venue < ActiveRecord::Base
 
   attr_accessible :name, :mixesdb_url
 
-  has_many :mixes
+  has_and_belongs_to_many :mixes
 
-  validates :full_title,  presence: true
+  validates :name,  presence: true
   validates :mixesdb_url, presence: true, uniqueness: true
 end

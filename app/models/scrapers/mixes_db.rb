@@ -45,7 +45,7 @@ module Scrapers
                 category = category_page.search('#mw-normal-catlinks li > a').first.text
 
                 puts link.text.inspect.green
-                puts link.category.inspect.blue
+                puts category.inspect.blue
 
                 case category
                 when 'Artist'
@@ -55,7 +55,7 @@ module Scrapers
                   )
                   mix.artists << artist
                 when 'Style'
-                  genre = Style.find_or_create_by(
+                  genre = Genre.find_or_create_by(
                     name: link.text,
                     mixesdb_url: link.attributes['href'].to_s
                   )

@@ -10,10 +10,6 @@ class CreateMixes < ActiveRecord::Migration
       t.text       :hearthisat_url
       t.text       :playfm_url
       t.text       :full_title, null: false
-      t.references :artists, index: true
-      t.references :genres, index: true
-      t.references :events, index: true
-      t.references :venues, index: true
       t.datetime   :air_date
       t.timestamps
     end
