@@ -42,30 +42,33 @@ module Scrapers
             begin
               unless link.match(/(\d{4})|Tracklist|Essential Mix/)
                 category_page = link.click
-                category = page.search('#mw-normal-catlinks li > a').first.text
+                category = category_page.search('#mw-normal-catlinks li > a').first.text
+
+                puts link.text.inspect.green
+                puts link.category.inspect.blue
 
                 case category
                 when 'Artist'
                   artist = Artist.find_or_create_by(
-                    name: link.text.gsub(' (Artist)', '')
+                    name: link.text.gsub(' (Artist)', ''),
                     mixesdb_url: link.attributes['href'].to_s
                   )
                   mix.artists << artist
                 when 'Style'
                   genre = Style.find_or_create_by(
-                    name: link.text
+                    name: link.text,
                     mixesdb_url: link.attributes['href'].to_s
                   )
                   mix.genres << genre
                 when 'Event'
                   event = Event.find_or_create_by(
-                    name: link.text
+                    name: link.text,
                     mixesdb_url: link.attributes['href'].to_s
                   )
                   mix.events << event
                 when 'Venue'
                   venue = Venue.find_or_create_by(
-                    name: link.text
+                    name: link.text,
                     mixesdb_url: link.attributes['href'].to_s
                   )
                   mix.venues << venue
