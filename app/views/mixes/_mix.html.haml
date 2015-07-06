@@ -1,0 +1,10 @@
+.mix
+  %h3= mix.title
+  %span.air-date= mix.air_date.to_formatted_s
+  %span.mixesdb_url= link_to mix.mixesdb_url
+
+  .associations
+    = render 'mixes/artists' if mix.artists.any?
+    = render 'mixes/genres'  if mix.genres.any?
+    = render 'mixes/venues'  if mix.venues.any?
+    = render 'mixes/events'  if mix.events.any?
