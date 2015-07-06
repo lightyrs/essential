@@ -1,10 +1,10 @@
 .mix
-  %h3= mix.title
-  %span.air-date= mix.air_date.to_formatted_s
-  %span.mixesdb_url= link_to mix.mixesdb_url
+  %h3= mix.full_title
+  .air-date= mix.air_date.try(:to_date)
+  .mixesdb_url= link_to mix.mixesdb_url
 
   .associations
-    = render 'mixes/artists' if mix.artists.any?
-    = render 'mixes/genres'  if mix.genres.any?
-    = render 'mixes/venues'  if mix.venues.any?
-    = render 'mixes/events'  if mix.events.any?
+    = render 'mixes/artists', artists: mix.artists if mix.artists.any?
+    = render 'mixes/genres',  genres: mix.genres   if mix.genres.any?
+    = render 'mixes/venues',  venues: mix.venues   if mix.venues.any?
+    = render 'mixes/events',  events: mix.events   if mix.events.any?
