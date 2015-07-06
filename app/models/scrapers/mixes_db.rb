@@ -40,9 +40,39 @@ module Scrapers
 
           page.search('#mw-normal-catlinks li > a').each do |link|
             begin
-              # mix.genres = []
-              # mix.artists = []
-              # mix.venue = ''
+              unless link.match(/(\d{4})|Tracklist|Essential Mix/)
+                category_page = link.click
+                category = page.search('#mw-normal-catlinks li > a').first.text
+
+                case category
+                when 'Artist'
+                  artist = Artist.find_or_create_by(
+                    name: link.text.gsub(' (Artist)', '')
+                    mixesdb_url: link.attributes['href'].to_s
+                  )
+                  mix.artists << artist
+                when 'Style'
+                  genre = Style.find_or_create_by(
+                    name: link.text
+                    mixesdb_url: link.attributes['href'].to_s
+                  )
+                  mix.genres << genre
+                when 'Event'
+                  event = Event.find_or_create_by(
+                    name: link.text
+                    mixesdb_url: link.attributes['href'].to_s
+                  )
+                  mix.events << event
+                when 'Venue'
+                  venue = Venue.find_or_create_by(
+                    name: link.text
+                    mixesdb_url: link.attributes['href'].to_s
+                  )
+                  mix.venues << venue
+                end
+
+                mix.save
+              end
             rescue => e
               puts "#{e.class}: #{e.message}".red
             end
@@ -50,16 +80,31 @@ module Scrapers
 
           page.search('[data-playersite]').each do |player|
             begin
-              # mix.soundcloud_url = ''
-              # mix.mixcloud_url = ''
-              # mix.youtube_url = ''
-              # mix.hulkshare_url = ''
-              # mix.zippshare_url = ''
-              # mix.hearthisat_url = ''
+              site = player.attributes['data-playersite'].to_s.gsub('data-playersite=', '').gsub('"', '')
+              url  = player.attributes['data-playerurl'].to_s.gsub('data-playerurl=', '').gsub('"', '')
+
+              case site
+              when 'HulkShare'
+                mix.hulkshare_url = url
+              when 'SoundCloud'
+                mix.soundcloud_url = url
+              when 'hearthis.at'
+                mix.hearthisat_url = url
+              when 'Mixcloud'
+                mix.mixcloud_url = url
+              when 'YouTube'
+                mix.youtube_url = url
+              when 'Zippyshare'
+                mix.zippyshare_url = url
+              when 'play.fm'
+                mix.playfm_url = url
+              end
             rescue => e
               puts "#{e.class}: #{e.message}".red
             end
           end
+
+          mix.save
         rescue => e
           puts "#{e.class}: #{e.message}".red
         end
