@@ -1,7 +1,7 @@
 class Mix < ActiveRecord::Base
 
-  attr_accessible :full_title, :air_date, :mixesdb_url, :soundcloud_url, :mixcloud_url,
-                  :youtube_url, :hulkshare_url, :zippyshare_url, :hearthisat_url
+  attr_accessible :full_title, :air_date, :mixesdb_url, :soundcloud_urls, :mixcloud_urls,
+                  :youtube_urls, :hulkshare_urls, :zippyshare_urls, :hearthisat_urls
 
   has_and_belongs_to_many :artists
   has_and_belongs_to_many :genres

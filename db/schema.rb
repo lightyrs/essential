@@ -68,21 +68,28 @@ ActiveRecord::Schema.define(version: 20150706015538) do
   add_index "genres_mixes", ["mix_id"], name: "index_genres_mixes_on_mix_id", using: :btree
 
   create_table "mixes", force: :cascade do |t|
-    t.text     "mixesdb_url",    null: false
-    t.text     "soundcloud_url"
-    t.text     "mixcloud_url"
-    t.text     "youtube_url"
-    t.text     "hulkshare_url"
-    t.text     "zippyshare_url"
-    t.text     "hearthisat_url"
-    t.text     "playfm_url"
-    t.text     "full_title",     null: false
+    t.text     "mixesdb_url",                  null: false
+    t.text     "soundcloud_urls", default: [],              array: true
+    t.text     "mixcloud_urls",   default: [],              array: true
+    t.text     "youtube_urls",    default: [],              array: true
+    t.text     "hulkshare_urls",  default: [],              array: true
+    t.text     "zippyshare_urls", default: [],              array: true
+    t.text     "hearthisat_urls", default: [],              array: true
+    t.text     "playfm_urls",     default: [],              array: true
+    t.text     "full_title",                   null: false
     t.datetime "air_date"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
+  add_index "mixes", ["hearthisat_urls"], name: "index_mixes_on_hearthisat_urls", using: :gin
+  add_index "mixes", ["hulkshare_urls"], name: "index_mixes_on_hulkshare_urls", using: :gin
+  add_index "mixes", ["mixcloud_urls"], name: "index_mixes_on_mixcloud_urls", using: :gin
   add_index "mixes", ["mixesdb_url"], name: "index_mixes_on_mixesdb_url", unique: true, using: :btree
+  add_index "mixes", ["playfm_urls"], name: "index_mixes_on_playfm_urls", using: :gin
+  add_index "mixes", ["soundcloud_urls"], name: "index_mixes_on_soundcloud_urls", using: :gin
+  add_index "mixes", ["youtube_urls"], name: "index_mixes_on_youtube_urls", using: :gin
+  add_index "mixes", ["zippyshare_urls"], name: "index_mixes_on_zippyshare_urls", using: :gin
 
   create_table "mixes_venues", force: :cascade do |t|
     t.integer "mix_id"

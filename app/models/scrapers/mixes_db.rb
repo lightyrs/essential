@@ -89,19 +89,19 @@ module Scrapers
 
               case site
               when 'HulkShare'
-                mix.hulkshare_url = url
+                mix.hulkshare_urls << url
               when 'SoundCloud'
-                mix.soundcloud_url = url
+                mix.soundcloud_urls << url
               when 'hearthis.at'
-                mix.hearthisat_url = url
+                mix.hearthisat_urls << url
               when 'Mixcloud'
-                mix.mixcloud_url = url
+                mix.mixcloud_urls << url
               when 'YouTube'
-                mix.youtube_url = url
+                mix.youtube_urls << url
               when 'Zippyshare'
-                mix.zippyshare_url = url
+                mix.zippyshare_urls << url
               when 'play.fm'
-                mix.playfm_url = url
+                mix.playfm_urls << url
               end
             rescue => e
               puts "#{e.class}: #{e.message}".red
