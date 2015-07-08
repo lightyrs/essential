@@ -20,10 +20,10 @@ class Mix < ActiveRecord::Base
           puts mix.full_title.green
           puts sc_url.red
 
-          Timeout::timeout(600) do
-            path = "#{Rails.root}/data/audio/soundcloud/#{mix.full_title.parameterize}"
-            unless Dir.exists?(path)
-              FileUtils.mkdir_p(path)
+          path = "#{Rails.root}/data/audio/soundcloud/#{mix.full_title.parameterize}"
+          unless Dir.exists?(path)
+            FileUtils.mkdir_p(path)
+            Timeout::timeout(600) do
               `otr dl #{sc_url} #{path}`
             end
           end
