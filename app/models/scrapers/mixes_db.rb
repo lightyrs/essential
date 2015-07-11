@@ -35,6 +35,8 @@ module Scrapers
 
     def scrape_resource!
       Mix.find_each do |mix|
+        next if mix.artists.try(:any?)
+
         begin
           page = @agent.get(mix.mixesdb_url)
 

@@ -20,15 +20,22 @@ class Mix < ActiveRecord::Base
           puts mix.full_title.green
           puts sc_url.red
 
-          path = "#{Rails.root}/data/audio/soundcloud/#{mix.full_title.parameterize}"
+          path = "/Volumes/Murphy/workspace/essential/data/audio/soundcloud/#{mix.full_title.parameterize}"
           unless Dir.exists?(path)
+
             FileUtils.mkdir_p(path)
-            Timeout::timeout(900) do
-              `otr dl #{sc_url} #{path}`
+            pipe = IO.popen("otr #{sc_url} #{path}")
+            pid = pipe.pid
+
+            begin
+              Timeout::timeout(900) do
+                Process.wait(pid)
+              end
+            rescue Timeout::Error
+              Process.kill('TERM', pid)
+              puts "TIMED OUT -- #{mix.full_title}".red
             end
           end
-
-          sleep 5
         rescue => e
           puts "#{e.class}: #{e.message}".red
         end
