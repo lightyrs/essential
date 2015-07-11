@@ -28,7 +28,7 @@ class Mix < ActiveRecord::Base
             pid = pipe.pid
 
             begin
-              Timeout::timeout(900) do
+              Timeout::timeout(350) do
                 Process.wait(pid)
               end
             rescue Timeout::Error
