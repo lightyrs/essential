@@ -2,10 +2,21 @@
 %html
   %head
     %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %meta{:content => "IE=edge", "http-equiv" => "X-UA-Compatible"}/
+    %meta{:content => "width=device-width, initial-scale=1", :name => "viewport"}/
     %title Essential
+
+    // Material Design Lite
+    %link{:href => "https://storage.googleapis.com/code.getmdl.io/1.0.0/material.blue_grey-red.min.css", :rel => "stylesheet"}/
+    %script{:src => "https://storage.googleapis.com/code.getmdl.io/1.0.0/material.min.js"}
+    %link{:href => "https://fonts.googleapis.com/icon?family=Material+Icons", :rel => "stylesheet"}/
+
     = stylesheet_link_tag    'application', media: 'all'
     = javascript_include_tag 'application'
     = csrf_meta_tags
   %body
-    .container
-      = yield
+    .mdl-layout.mdl-js-layout.mdl-layout--fixed-header
+      = render 'layouts/navigation/fixed_header'
+      %main.mdl-layout__content
+        .page-content
+          = yield

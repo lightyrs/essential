@@ -1,10 +1,8 @@
-.mix
-  %h3= mix.full_title
-  .air-date= mix.air_date.try(:to_date)
-  .mixesdb_url= link_to mix.mixesdb_url
+.mix.mdl-cell.mdl-cell--3-col.mdl-cell--4-col-tablet
+  .mdl-card.mdl-shadow--2dp.mdl-card-wide
+    = link_to mix, class: 'mdl-card__title' do |link|
+      %h2.mdl-card__title-text= mix.full_title
+    .mdl-card__supporting-text= mix.air_date.try(:to_date)
+    .mdl-card__actions.mdl-card--border
+      = link_to 'View on MixesDB', mix.mixesdb_url, class: 'mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect', target: 'blank'
 
-  .associations
-    = render 'mixes/artists', artists: mix.artists if mix.artists.any?
-    = render 'mixes/genres',  genres: mix.genres   if mix.genres.any?
-    = render 'mixes/venues',  venues: mix.venues   if mix.venues.any?
-    = render 'mixes/events',  events: mix.events   if mix.events.any?
